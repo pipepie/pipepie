@@ -1,0 +1,45 @@
+# Binary
+pie
+pie.exe
+hookpipe
+
+# Database
+*.db
+*.db-wal
+*.db-shm
+
+# Server key (secret!)
+*.key
+pipepie-certs/
+
+# Build
+dist/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+*~
+
+# Test artifacts
+/tmp/
+*.test
+*.out
+__debug_bin*
+
+# Config with secrets (user-specific)
+pipepie.yaml
+
+# Claude
+CLAUDE.md
+
+# Demo — only GIFs go to git
+demo/pie
+demo/*.tape
+demo/*.sh
+pipepie

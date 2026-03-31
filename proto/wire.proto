@@ -1,0 +1,79 @@
+syntax = "proto3";
+
+package pipepie;
+
+option go_package = "github.com/Seinarukiro2/pipepie/internal/protocol/pb";
+
+// Frame wraps every message on the wire. The oneof ensures type-safe dispatch.
+message Frame {
+  oneof payload {
+    Auth               auth           = 1;
+    AuthOK             auth_ok        = 2;
+    AuthError          auth_error     = 3;
+    HttpRequest        request        = 4;
+    HttpResponse       response       = 5;
+    ForwardError       forward_error  = 6;
+    Ping               ping           = 7;
+    Pong               pong           = 8;
+    DashboardTokenReq  dash_token_req = 9;
+    DashboardTokenResp dash_token_resp = 10;
+  }
+}
+
+// ── Dashboard auth ───────────────────────────────────────────────────
+
+message DashboardTokenReq {}
+
+message DashboardTokenResp {
+  string token = 1;  // one-time token, valid 5 minutes
+  string url   = 2;  // full URL to open in browser
+}
+
+// ── Auth handshake ───────────────────────────────────────────────────
+
+message Auth {
+  string token     = 1;
+  string subdomain = 2;
+  string version   = 3;
+}
+
+message AuthOK {
+  string subdomain  = 1;
+  string public_url = 2;
+}
+
+message AuthError {
+  string message = 1;
+}
+
+// ── Webhook relay ────────────────────────────────────────────────────
+
+message HttpRequest {
+  string            id        = 1;
+  string            method    = 2;
+  string            path      = 3;
+  string            query     = 4;
+  map<string,string> headers  = 5;
+  bytes             body      = 6;  // raw bytes, zstd-compressed if flag set
+  bool              compressed = 7; // true if body is zstd-compressed
+  string            replay_of = 8;  // original request ID if this is a replay
+}
+
+message HttpResponse {
+  string            id          = 1;
+  int32             status      = 2;
+  map<string,string> headers    = 3;
+  bytes             body        = 4;  // raw bytes, zstd-compressed if flag set
+  bool              compressed  = 5;
+  int64             duration_ms = 6;
+}
+
+message ForwardError {
+  string id      = 1;
+  string message = 2;
+}
+
+// ── Keepalive ────────────────────────────────────────────────────────
+
+message Ping {}
+message Pong {}
