@@ -90,6 +90,10 @@ func Run(configPath string) error {
 	fmt.Println("  " + titleStyle.Render("pie setup") + "  " + dimStyle.Render("server configuration"))
 	fmt.Println()
 
+	// Kill existing pie server if running
+	exec.Command("systemctl", "stop", "pipepie").Run()
+	exec.Command("pkill", "-f", "pie server").Run()
+
 	// ── 1. Domain ────────────────────────────────────────────────────
 	var domain string
 	err := huh.NewForm(
@@ -113,6 +117,7 @@ func Run(configPath string) error {
 	if err != nil {
 		return err
 	}
+	domain = strings.TrimSpace(domain)
 
 	// ── 2. Public IP ─────────────────────────────────────────────────
 	var pubIP string
@@ -362,29 +367,38 @@ func Run(configPath string) error {
 		}
 		workDir, _ := os.Getwd()
 
+		autoTLS := ""
+		if tlsCfg.Mode == "auto" {
+			autoTLS = " --auto-tls"
+		}
+
 		unit := fmt.Sprintf(`[Unit]
 Description=pipepie tunnel server
 After=network.target
 
 [Service]
 Type=simple
-ExecStart=%s server --config %s
+ExecStart=%s server --config %s%s
 WorkingDirectory=%s
 Restart=always
 RestartSec=5
 
 [Install]
 WantedBy=multi-user.target
-`, piePath, filepath.Join(workDir, configPath), workDir)
+`, piePath, filepath.Join(workDir, configPath), autoTLS, workDir)
 
 		servicePath := "/etc/systemd/system/pipepie.service"
 		if err := os.WriteFile(servicePath, []byte(unit), 0644); err == nil {
 			fmt.Println(successStyle.Render("  ✓") + " Created " + dimStyle.Render(servicePath))
-			fmt.Println()
-			fmt.Println(cyanStyle.Render("    sudo systemctl daemon-reload"))
-			fmt.Println(cyanStyle.Render("    sudo systemctl enable --now pipepie"))
+			// Auto-enable and start
+			exec.Command("systemctl", "daemon-reload").Run()
+			if err := exec.Command("systemctl", "enable", "--now", "pipepie").Run(); err == nil {
+				fmt.Println(successStyle.Render("  ✓") + " Server started and enabled on boot")
+			} else {
+				fmt.Println(dimStyle.Render("  Run: sudo systemctl enable --now pipepie"))
+			}
 		} else {
-			fmt.Println(dimStyle.Render("  Could not write systemd unit (try with sudo)"))
+			fmt.Println(dimStyle.Render("  Could not write systemd unit (try running setup with sudo)"))
 		}
 	}
 

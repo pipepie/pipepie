@@ -106,6 +106,10 @@ func (c *Client) connect(ctx context.Context) error {
 	switch p := frame.Payload.(type) {
 	case *pb.Frame_AuthOk:
 		c.display.Connected(p.AuthOk.PublicUrl, c.cfg.Forward)
+		// Remember assigned subdomain for reconnects
+		if p.AuthOk.Subdomain != "" && c.cfg.Subdomain == "" {
+			c.cfg.Subdomain = p.AuthOk.Subdomain
+		}
 	case *pb.Frame_AuthError:
 		return fmt.Errorf("auth rejected: %s", p.AuthError.Message)
 	default:

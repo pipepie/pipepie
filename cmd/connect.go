@@ -6,9 +6,11 @@ import (
 	"fmt"
 	"os"
 	"os/signal"
+	"strings"
 
 	"github.com/Seinarukiro2/pipepie/internal/client"
 	"github.com/Seinarukiro2/pipepie/internal/config"
+	"github.com/charmbracelet/huh"
 	"github.com/spf13/cobra"
 )
 
@@ -44,6 +46,39 @@ Uses saved config from 'pie login' — or override with flags.
 		subdomain := resolveFlag(cmd, "name", savedSub, "")
 		forward := resolveFlag(cmd, "forward", "", "http://localhost:3000")
 		tcpForward := mustStr(cmd, "tcp")
+
+		// Interactive subdomain picker if not set
+		if subdomain == "" && tcpForward == "" {
+			var subChoice string
+			huh.NewForm(
+				huh.NewGroup(
+					huh.NewSelect[string]().
+						Title("Subdomain").
+						Options(
+							huh.NewOption("Choose my own (stable URL)", "custom"),
+							huh.NewOption("Random (changes on reconnect)", "random"),
+						).
+						Value(&subChoice),
+				),
+			).WithTheme(huh.ThemeDracula()).Run()
+
+			if subChoice == "custom" {
+				huh.NewForm(
+					huh.NewGroup(
+						huh.NewInput().
+							Title("Subdomain name").
+							Placeholder("my-app").
+							Value(&subdomain),
+					),
+				).WithTheme(huh.ThemeDracula()).Run()
+				subdomain = strings.TrimSpace(subdomain)
+				// Save to config for next time
+				if active != nil && subdomain != "" {
+					active.Subdomain = subdomain
+					config.SaveClient(cfg)
+				}
+			}
+		}
 
 		// Validate key
 		if keyHex == "" {
