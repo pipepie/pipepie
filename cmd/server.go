@@ -74,12 +74,16 @@ var serverCmd = &cobra.Command{
 		signal.Notify(sigCh, syscall.SIGINT, syscall.SIGTERM)
 		go func() {
 			<-sigCh
-			log.Info("shutting down...")
 			srv.Close()
 			os.Exit(0)
 		}()
 
-		return srv.Run()
+		err = srv.Run()
+		// Don't print "Server closed" on graceful shutdown
+		if err != nil && err.Error() == "http: Server closed" {
+			return nil
+		}
+		return err
 	},
 }
 

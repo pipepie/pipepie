@@ -90,9 +90,10 @@ func Run(configPath string) error {
 	fmt.Println("  " + titleStyle.Render("pie setup") + "  " + dimStyle.Render("server configuration"))
 	fmt.Println()
 
-	// Kill existing pie server if running
-	exec.Command("systemctl", "stop", "pipepie").Run()
-	exec.Command("pkill", "-f", "pie server").Run()
+	// Kill existing pie server if running (suppress output)
+	exec.Command("systemctl", "stop", "pipepie").CombinedOutput()
+	exec.Command("pkill", "-f", "pie server").CombinedOutput()
+	time.Sleep(500 * time.Millisecond)
 
 	// ── 1. Domain ────────────────────────────────────────────────────
 	var domain string
