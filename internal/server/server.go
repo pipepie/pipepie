@@ -71,13 +71,14 @@ func DefaultConfig() Config {
 
 // Server is the pipepie relay server.
 type Server struct {
-	cfg     Config
-	store   *store.Store
-	hub     *Hub
-	httpSrv *http.Server
-	key     noise.DHKey
+	cfg      Config
+	store    *store.Store
+	hub      *Hub
+	httpSrv  *http.Server
+	key      noise.DHKey
 	dashAuth *DashboardAuth
-	log     *slog.Logger
+	pipeline *PipelineTracker
+	log      *slog.Logger
 }
 
 // New creates a new server.
@@ -97,6 +98,7 @@ func New(cfg Config, log *slog.Logger) (*Server, error) {
 		hub:      NewHub(log),
 		key:      key,
 		dashAuth: NewDashboardAuth(),
+		pipeline: NewPipelineTracker(60 * time.Second),
 		log:      log,
 	}, nil
 }
@@ -157,6 +159,7 @@ func (s *Server) Run() error {
 	// Pipeline tracing
 	mux.HandleFunc("GET /api/pipelines/{pipeline_id}/traces", s.handlePipelineTraces)
 	mux.HandleFunc("GET /api/traces/{trace_id}", s.handleTraceTimeline)
+	mux.HandleFunc("POST /api/pipeline-rules", s.handleSetPipelineRules)
 
 	// Dashboard overview (no admin required)
 	mux.HandleFunc("GET /api/overview", s.handleOverview)
@@ -419,6 +422,21 @@ func (s *Server) handleWebhook(w http.ResponseWriter, r *http.Request, subdomain
 				stepName = rule.StepName
 				break
 			}
+		}
+	}
+
+	// Auto-correlate: if this is a pipeline request without trace_id,
+	// assign one automatically (correlated with recent requests)
+	if pipelineID != "" && traceID == "" {
+		traceID = s.pipeline.Correlate(tunnel.ID, pipelineID)
+	}
+
+	// Auto-detect step name from path if not set
+	if stepName == "" && pipelineID != "" {
+		// Use last path segment as step name: /replicate/callback → callback
+		parts := strings.Split(strings.Trim(r.URL.Path, "/"), "/")
+		if len(parts) > 0 {
+			stepName = parts[len(parts)-1]
 		}
 	}
 

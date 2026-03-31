@@ -1,12 +1,17 @@
 package cmd
 
 import (
+	"bytes"
 	"context"
 	"encoding/hex"
+	"encoding/json"
 	"fmt"
+	"net/http"
 	"os"
 	"os/signal"
+	"strings"
 	"sync"
+	"time"
 
 	"github.com/Seinarukiro2/pipepie/internal/client"
 	"github.com/Seinarukiro2/pipepie/internal/config"
@@ -68,6 +73,28 @@ Example pipepie.yaml:
 		keyBytes, err := hex.DecodeString(cfg.Key)
 		if err != nil || len(keyBytes) != 32 {
 			return fmt.Errorf("invalid key in pipepie.yaml")
+		}
+
+		// Send pipeline rules to server if defined
+		if rules := cfg.PipelineRules(); len(rules) > 0 {
+			go func() {
+				time.Sleep(2 * time.Second) // wait for tunnels to connect
+				rulesJSON, _ := json.Marshal(rules)
+				// Derive HTTP address from tunnel server
+				host := cfg.Server
+				if i := strings.Index(host, ":"); i != -1 {
+					host = host[:i]
+				}
+				for _, port := range []string{"443", "8080", "80"} {
+					resp, err := http.Post("http://"+host+":"+port+"/api/pipeline-rules", "application/json", bytes.NewReader(rulesJSON))
+					if err == nil {
+						resp.Body.Close()
+						if resp.StatusCode == 200 {
+							break
+						}
+					}
+				}
+			}()
 		}
 
 		tunnels := cfg.ResolvedTunnels()

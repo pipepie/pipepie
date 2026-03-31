@@ -294,6 +294,30 @@ func (s *Server) handleTraceTimeline(w http.ResponseWriter, r *http.Request) {
 	})
 }
 
+// ── Pipeline rules ───────────────────────────────────────────────────
+
+func (s *Server) handleSetPipelineRules(w http.ResponseWriter, r *http.Request) {
+	var rules []struct {
+		PathPrefix string `json:"path_prefix"`
+		PipelineID string `json:"pipeline_id"`
+		StepName   string `json:"step_name"`
+	}
+	if err := json.NewDecoder(r.Body).Decode(&rules); err != nil {
+		writeJSON(w, http.StatusBadRequest, map[string]string{"error": err.Error()})
+		return
+	}
+	newRules := make([]PipelineRule, len(rules))
+	for i, r := range rules {
+		newRules[i] = PipelineRule{
+			PathPrefix: r.PathPrefix,
+			PipelineID: r.PipelineID,
+			StepName:   r.StepName,
+		}
+	}
+	s.cfg.PipelineRules = newRules
+	writeJSON(w, http.StatusOK, map[string]any{"rules": len(newRules)})
+}
+
 // ── UI ───────────────────────────────────────────────────────────────
 
 func (s *Server) handleUI(w http.ResponseWriter, r *http.Request) {

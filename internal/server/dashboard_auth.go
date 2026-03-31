@@ -4,6 +4,7 @@ import (
 	"crypto/rand"
 	"encoding/hex"
 	"net/http"
+	"strings"
 	"sync"
 	"time"
 )
@@ -81,6 +82,13 @@ func (da *DashboardAuth) Middleware(next http.Handler) http.Handler {
 
 		// Only protect /ui/ routes
 		if len(path) < 4 || path[:4] != "/ui/" {
+			next.ServeHTTP(w, r)
+			return
+		}
+
+		// Skip auth for localhost (self-hosted dev)
+		host := r.Host
+		if strings.HasPrefix(host, "localhost") || strings.HasPrefix(host, "127.0.0.1") {
 			next.ServeHTTP(w, r)
 			return
 		}

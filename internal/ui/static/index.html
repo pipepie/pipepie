@@ -1,603 +1,277 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>pipepie</title>
-  <style>
-    @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&family=DM+Sans:wght@400;500;600;700&display=swap');
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>pipepie</title>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&family=DM+Sans:wght@400;500;600;700&family=VT323&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{
+--bg:#282a36;--bg2:#1e1f29;--bg3:#343746;--fg:#f8f8f2;
+--purple:#bd93f9;--green:#50fa7b;--pink:#ff79c6;--cyan:#8be9fd;
+--yellow:#f1fa8c;--red:#ff5555;--comment:#6272a4;--line:#44475a;
+--mono:'JetBrains Mono','SF Mono',monospace;--sans:'DM Sans',system-ui,sans-serif;
+}
+body{background:var(--bg);color:var(--fg);font-family:var(--sans);font-size:14px;-webkit-font-smoothing:antialiased}
+body::before{content:'';position:fixed;inset:0;background:repeating-linear-gradient(0deg,transparent,transparent 3px,rgba(0,0,0,.03) 3px,rgba(0,0,0,.03) 4px);pointer-events:none;z-index:9999}
+a{color:var(--cyan);text-decoration:none}a:hover{color:var(--fg)}
+@keyframes glow{0%,100%{text-shadow:0 0 8px rgba(189,147,249,.3)}50%{text-shadow:0 0 20px rgba(189,147,249,.5)}}
+@keyframes fadeIn{from{opacity:0;transform:translateY(4px)}to{opacity:1;transform:none}}
 
-    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+.shell{display:flex;height:100vh}
 
-    :root {
-      --bg-root: #06080d;
-      --bg-surface: #0c1018;
-      --bg-elevated: #131924;
-      --bg-hover: #1a2233;
-      --border: #1e2a3a;
-      --border-subtle: #151d2b;
-      --text-primary: #e1e7ef;
-      --text-secondary: #7a8ba3;
-      --text-tertiary: #4a5568;
-      --accent: #818cf8;
-      --accent-dim: rgba(129,140,248,0.12);
-      --green: #34d399;
-      --green-dim: rgba(52,211,153,0.12);
-      --red: #f87171;
-      --red-dim: rgba(248,113,113,0.12);
-      --amber: #fbbf24;
-      --amber-dim: rgba(251,191,36,0.12);
-      --blue: #60a5fa;
-      --blue-dim: rgba(96,165,250,0.12);
-      --cyan: #22d3ee;
-      --mono: 'JetBrains Mono', 'SF Mono', 'Fira Code', monospace;
-      --sans: 'DM Sans', -apple-system, BlinkMacSystemFont, sans-serif;
-    }
+/* Sidebar */
+.side{width:48px;background:var(--bg2);border-right:1px solid var(--line);display:flex;flex-direction:column;align-items:center;padding:14px 0;gap:4px;flex-shrink:0}
+.side-logo{width:30px;height:30px;border-radius:8px;background:linear-gradient(135deg,var(--purple),var(--pink));display:flex;align-items:center;justify-content:center;font-family:var(--mono);font-weight:700;font-size:13px;color:#fff;margin-bottom:16px}
+.side-btn{width:34px;height:34px;border-radius:7px;border:none;background:transparent;color:var(--comment);cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .15s;font-size:16px}
+.side-btn:hover{background:var(--bg3);color:var(--fg)}
+.side-btn.on{background:rgba(189,147,249,.12);color:var(--purple)}
 
-    body { background: var(--bg-root); color: var(--text-primary); font-family: var(--sans); -webkit-font-smoothing: antialiased; overflow-x: hidden; }
+.main{flex:1;display:flex;flex-direction:column;min-width:0}
 
-    /* ── Noise texture overlay ──────────────────────────────────────── */
-    body::before {
-      content: ''; position: fixed; inset: 0; z-index: 9999; pointer-events: none;
-      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.03'/%3E%3C/svg%3E");
-      background-repeat: repeat; background-size: 256px 256px; opacity: 0.4;
-    }
+/* Topbar */
+.top{height:48px;border-bottom:1px solid var(--line);display:flex;align-items:center;padding:0 18px;gap:12px;background:var(--bg2);flex-shrink:0}
+.top-title{font-family:'VT323',monospace;font-size:22px;color:var(--purple);animation:glow 4s ease-in-out infinite}
+.top-sep{width:1px;height:18px;background:var(--line)}
+.top-pill{display:inline-flex;align-items:center;gap:6px;padding:3px 10px;background:var(--bg);border:1px solid var(--line);border-radius:5px;font-family:var(--mono);font-size:12px}
+.dot{width:7px;height:7px;border-radius:50%;flex-shrink:0}
+.dot.on{background:var(--green);box-shadow:0 0 6px var(--green)}
+.dot.off{background:var(--red);opacity:.7}
+.top-r{margin-left:auto;font-family:var(--mono);font-size:11px;color:var(--comment)}
 
-    .shell { display: flex; height: 100vh; }
+/* Stats */
+.stats{display:flex;gap:1px;background:var(--line);border-bottom:1px solid var(--line);flex-shrink:0}
+.st{flex:1;background:var(--bg2);padding:10px 16px}
+.st .l{font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:.08em;color:var(--comment)}
+.st .v{font-family:var(--mono);font-size:22px;font-weight:700;letter-spacing:-.02em}
+.st .v.g{color:var(--green)}.st .v.r{color:var(--red)}.st .v.y{color:var(--yellow)}
 
-    /* ── Sidebar ────────────────────────────────────────────────────── */
-    .sidebar {
-      width: 52px; background: var(--bg-surface); border-right: 1px solid var(--border-subtle);
-      display: flex; flex-direction: column; align-items: center; padding: 16px 0; gap: 4px; flex-shrink: 0;
-    }
-    .sidebar-logo {
-      width: 32px; height: 32px; border-radius: 8px; background: linear-gradient(135deg, var(--accent), #a78bfa);
-      display: flex; align-items: center; justify-content: center; margin-bottom: 20px;
-      font-family: var(--mono); font-weight: 700; font-size: 14px; color: white;
-    }
-    .sidebar-btn {
-      width: 36px; height: 36px; border-radius: 8px; border: none; background: transparent;
-      color: var(--text-tertiary); cursor: pointer; display: flex; align-items: center; justify-content: center;
-      transition: all 0.15s;
-    }
-    .sidebar-btn:hover { background: var(--bg-hover); color: var(--text-secondary); }
-    .sidebar-btn.active { background: var(--accent-dim); color: var(--accent); }
-    .sidebar-btn svg { width: 18px; height: 18px; }
+/* Tabs */
+.tabs{display:flex;border-bottom:1px solid var(--line);padding:0 18px}
+.tab{padding:8px 14px;cursor:pointer;color:var(--comment);border-bottom:2px solid transparent;font-size:13px;font-weight:500}
+.tab.on{color:var(--purple);border-color:var(--purple)}
+.tab:hover{color:var(--fg)}
 
-    /* ── Main content ───────────────────────────────────────────────── */
-    .main { flex: 1; display: flex; flex-direction: column; min-width: 0; }
+.content{flex:1;overflow-y:auto}
 
-    /* ── Top bar ────────────────────────────────────────────────────── */
-    .topbar {
-      height: 52px; border-bottom: 1px solid var(--border-subtle);
-      display: flex; align-items: center; padding: 0 20px; gap: 12px; flex-shrink: 0;
-      background: var(--bg-surface);
-    }
-    .topbar-title { font-family: var(--mono); font-size: 13px; font-weight: 600; color: var(--text-secondary); }
-    .topbar-title em { font-style: normal; color: var(--accent); }
-    .topbar-sep { width: 1px; height: 20px; background: var(--border); }
-    .tunnel-pill {
-      display: inline-flex; align-items: center; gap: 6px; padding: 4px 10px;
-      background: var(--bg-elevated); border: 1px solid var(--border); border-radius: 6px;
-      font-family: var(--mono); font-size: 12px; color: var(--text-primary);
-    }
-    .live-dot { width: 7px; height: 7px; border-radius: 50%; flex-shrink: 0; }
-    .live-dot.on { background: var(--green); box-shadow: 0 0 6px var(--green); }
-    .live-dot.off { background: var(--red); opacity: 0.7; }
-    .topbar-right { margin-left: auto; display: flex; align-items: center; gap: 8px; }
-    .topbar-stat { font-family: var(--mono); font-size: 11px; color: var(--text-tertiary); padding: 3px 8px; border-radius: 4px; background: var(--bg-elevated); }
-    .topbar-stat b { color: var(--text-secondary); font-weight: 600; }
+/* Request table */
+.rh{display:grid;grid-template-columns:72px 58px 1fr 52px 56px 48px 70px;padding:0 18px;height:30px;align-items:center;border-bottom:1px solid var(--line);font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:.08em;color:var(--comment);background:var(--bg2);position:sticky;top:0;z-index:5}
+.rr{display:grid;grid-template-columns:72px 58px 1fr 52px 56px 48px 70px;padding:0 18px;height:38px;align-items:center;border-bottom:1px solid rgba(68,71,90,.4);cursor:pointer;transition:background .1s;font-size:13px;animation:fadeIn .15s ease}
+.rr:hover{background:var(--bg3)}
+.rr.sel{background:rgba(189,147,249,.06);border-left:2px solid var(--purple);padding-left:16px}
+.c-t{font-family:var(--mono);font-size:11px;color:var(--comment)}
+.c-m{font-family:var(--mono);font-size:12px;font-weight:600}
+.mGET{color:var(--green)}.mPOST{color:var(--yellow)}.mPUT{color:var(--cyan)}.mPATCH{color:var(--purple)}.mDELETE{color:var(--red)}
+.c-p{font-family:var(--mono);font-size:12px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.c-s{font-family:var(--mono);font-size:12px;font-weight:600}.s2{color:var(--green)}.s4{color:var(--yellow)}.s5{color:var(--red)}.sp{color:var(--comment)}
+.c-d{font-family:var(--mono);font-size:11px;color:var(--comment)}
+.step{font-family:var(--mono);font-size:10px;padding:1px 6px;border-radius:3px;background:rgba(189,147,249,.1);color:var(--purple)}
 
-    /* ── Stats strip ────────────────────────────────────────────────── */
-    .stats-strip {
-      display: flex; gap: 1px; background: var(--border-subtle); border-bottom: 1px solid var(--border-subtle); flex-shrink: 0;
-    }
-    .stat-cell {
-      flex: 1; background: var(--bg-surface); padding: 12px 16px; display: flex; flex-direction: column; gap: 2px;
-    }
-    .stat-cell .label { font-size: 10px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.08em; color: var(--text-tertiary); }
-    .stat-cell .val { font-family: var(--mono); font-size: 22px; font-weight: 700; letter-spacing: -0.02em; }
-    .stat-cell .val.ok { color: var(--green); }
-    .stat-cell .val.err { color: var(--red); }
-    .stat-cell .val.lat { color: var(--amber); }
+/* Trace (Jaeger-style) */
+.tr-card{background:var(--bg2);border:1px solid var(--line);border-radius:6px;margin:0 18px 10px;overflow:hidden;animation:fadeIn .2s ease}
+.tr-h{display:flex;align-items:center;justify-content:space-between;padding:10px 14px;border-bottom:1px solid var(--line)}
+.tr-name{font-family:var(--mono);font-size:13px;font-weight:600;color:var(--purple)}
+.tr-id{font-family:var(--mono);font-size:11px;color:var(--comment);margin-left:8px}
+.tr-st{font-family:var(--mono);font-size:11px;font-weight:600;padding:2px 8px;border-radius:3px}
+.tr-st.ok{color:var(--green);background:rgba(80,250,123,.08)}.tr-st.fail{color:var(--red);background:rgba(255,85,85,.08)}
+.tr-body{padding:14px}
+.tr-step{display:flex;align-items:center;gap:10px;margin-bottom:6px}
+.tr-sn{width:90px;font-family:var(--mono);font-size:12px;text-align:right;color:var(--cyan);flex-shrink:0}
+.tr-bw{flex:1;height:22px;background:var(--bg);border-radius:3px;position:relative;overflow:hidden}
+.tr-b{height:100%;border-radius:3px;display:flex;align-items:center;padding-left:8px;font-family:var(--mono);font-size:11px;transition:width .3s ease}
+.tr-b.ok{background:linear-gradient(90deg,rgba(80,250,123,.2),rgba(80,250,123,.05));border-left:2px solid var(--green);color:var(--green)}
+.tr-b.fail{background:linear-gradient(90deg,rgba(255,85,85,.2),rgba(255,85,85,.05));border-left:2px solid var(--red);color:var(--red)}
+.tr-b.pend{background:linear-gradient(90deg,rgba(241,250,140,.15),rgba(241,250,140,.03));border-left:2px solid var(--yellow);color:var(--yellow)}
+.tr-ss{width:32px;font-family:var(--mono);font-size:11px;flex-shrink:0}
+.tr-tot{text-align:right;padding-top:8px;border-top:1px solid var(--line);margin-top:4px;font-family:var(--mono);font-size:11px;color:var(--comment)}
 
-    /* ── Content area ───────────────────────────────────────────────── */
-    .content { flex: 1; overflow-y: auto; }
+/* Detail panel */
+.ov{position:fixed;inset:0;background:rgba(0,0,0,.4);z-index:50;opacity:0;pointer-events:none;transition:opacity .2s}
+.ov.open{opacity:1;pointer-events:auto}
+.det{position:fixed;top:0;right:0;width:520px;max-width:90vw;height:100vh;background:var(--bg2);border-left:1px solid var(--line);z-index:60;transform:translateX(100%);transition:transform .22s cubic-bezier(.16,1,.3,1);display:flex;flex-direction:column}
+.det.open{transform:translateX(0)}
+.dh{display:flex;align-items:center;justify-content:space-between;padding:12px 16px;border-bottom:1px solid var(--line);flex-shrink:0}
+.dx{width:26px;height:26px;border-radius:5px;border:1px solid var(--line);background:var(--bg);color:var(--comment);cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:13px}
+.dx:hover{border-color:var(--fg);color:var(--fg)}
+.ds{flex:1;overflow-y:auto;padding:14px 16px}
+.da{display:flex;gap:8px;margin-bottom:14px}
+.btn{display:inline-flex;align-items:center;gap:4px;padding:4px 12px;border-radius:4px;border:1px solid var(--line);background:var(--bg);color:var(--fg);cursor:pointer;font-family:var(--sans);font-size:12px;font-weight:500;transition:all .12s}
+.btn:hover{border-color:var(--purple);color:var(--purple)}
+.btn-p{background:rgba(189,147,249,.08);border-color:var(--purple);color:var(--purple)}
+.sect{margin-bottom:16px}
+.sect-t{font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:.08em;color:var(--comment);margin-bottom:6px;padding-bottom:3px;border-bottom:1px solid var(--line)}
+.kv{width:100%}.kv td{padding:2px 0;font-family:var(--mono);font-size:12px;vertical-align:top}
+.kv td:first-child{color:var(--cyan);width:35%;padding-right:10px}
+.kv td:last-child{word-break:break-all}
+.cblk{background:var(--bg);border:1px solid var(--line);border-radius:5px;padding:10px;font-family:var(--mono);font-size:12px;line-height:1.6;max-height:280px;overflow:auto;white-space:pre-wrap;word-break:break-word}
 
-    /* ── Request list ───────────────────────────────────────────────── */
-    .req-list { width: 100%; }
-    .req-row {
-      display: grid; grid-template-columns: 80px 64px 1fr 70px 70px 90px;
-      align-items: center; padding: 0 20px; height: 40px; border-bottom: 1px solid var(--border-subtle);
-      cursor: pointer; transition: background 0.1s; font-size: 13px;
-    }
-    .req-row:hover { background: var(--bg-hover); }
-    .req-row.selected { background: var(--accent-dim); border-left: 2px solid var(--accent); padding-left: 18px; }
-    .req-row-head {
-      display: grid; grid-template-columns: 80px 64px 1fr 70px 70px 90px;
-      padding: 0 20px; height: 32px; align-items: center; border-bottom: 1px solid var(--border);
-      font-size: 10px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.08em;
-      color: var(--text-tertiary); background: var(--bg-surface); position: sticky; top: 0; z-index: 10;
-    }
-    .cell-time { font-family: var(--mono); font-size: 11px; color: var(--text-tertiary); }
-    .cell-method { font-family: var(--mono); font-size: 12px; font-weight: 600; }
-    .cell-method.GET { color: var(--green); }
-    .cell-method.POST { color: var(--amber); }
-    .cell-method.PUT { color: var(--blue); }
-    .cell-method.PATCH { color: var(--accent); }
-    .cell-method.DELETE { color: var(--red); }
-    .cell-path { font-family: var(--mono); font-size: 12px; color: var(--text-primary); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-    .cell-status { font-family: var(--mono); font-size: 12px; font-weight: 600; }
-    .s2 { color: var(--green); } .s4 { color: var(--amber); } .s5 { color: var(--red); }
-    .s-pend { color: var(--text-tertiary); }
-    .cell-dur { font-family: var(--mono); font-size: 11px; color: var(--text-tertiary); }
-    .cell-step {}
-    .step-tag {
-      display: inline-block; padding: 2px 7px; border-radius: 3px; font-family: var(--mono);
-      font-size: 10px; font-weight: 600; background: var(--accent-dim); color: var(--accent);
-    }
+/* Tunnel cards */
+.cards{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:10px;padding:18px}
+.card{background:var(--bg2);border:1px solid var(--line);border-radius:7px;padding:14px;cursor:pointer;transition:all .15s;text-decoration:none;color:var(--fg);display:block}
+.card:hover{border-color:var(--purple);background:var(--bg3)}
+.card-h{display:flex;justify-content:space-between;align-items:center;margin-bottom:6px}
+.card-name{font-family:var(--mono);font-size:14px;font-weight:600}
+.card-url{font-family:var(--mono);font-size:11px;color:var(--comment);margin-bottom:10px;word-break:break-all}
+.card-stats{display:flex;gap:14px;font-size:12px;color:var(--comment)}.card-stats b{color:var(--fg)}
+.card-meta{font-family:var(--mono);font-size:11px;color:var(--comment);margin-top:8px}
 
-    /* ── Detail panel ───────────────────────────────────────────────── */
-    .detail-backdrop { position: fixed; inset: 0; background: rgba(0,0,0,0.4); z-index: 50; opacity: 0; pointer-events: none; transition: opacity 0.2s; }
-    .detail-backdrop.open { opacity: 1; pointer-events: auto; }
-    .detail {
-      position: fixed; top: 0; right: 0; width: 560px; max-width: 90vw; height: 100vh;
-      background: var(--bg-surface); border-left: 1px solid var(--border); z-index: 60;
-      transform: translateX(100%); transition: transform 0.25s cubic-bezier(0.16,1,0.3,1);
-      display: flex; flex-direction: column;
-    }
-    .detail.open { transform: translateX(0); }
-    .detail-head {
-      padding: 16px 20px; border-bottom: 1px solid var(--border-subtle);
-      display: flex; align-items: center; justify-content: space-between; flex-shrink: 0;
-    }
-    .detail-head-left { display: flex; align-items: center; gap: 10px; }
-    .detail-close-btn { width: 28px; height: 28px; border-radius: 6px; border: 1px solid var(--border); background: var(--bg-elevated); color: var(--text-tertiary); cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 14px; }
-    .detail-close-btn:hover { border-color: var(--text-tertiary); color: var(--text-primary); }
-    .detail-scroll { flex: 1; overflow-y: auto; padding: 16px 20px; }
-    .detail-actions { display: flex; gap: 8px; margin-bottom: 16px; }
-    .btn-sm {
-      display: inline-flex; align-items: center; gap: 5px; padding: 5px 12px; border-radius: 5px;
-      border: 1px solid var(--border); background: var(--bg-elevated); color: var(--text-secondary);
-      cursor: pointer; font-family: var(--sans); font-size: 12px; font-weight: 500; transition: all 0.12s;
-    }
-    .btn-sm:hover { border-color: var(--accent); color: var(--accent); }
-    .btn-sm.primary { background: var(--accent-dim); border-color: var(--accent); color: var(--accent); }
-    .btn-sm.primary:hover { background: var(--accent); color: white; }
-    .sect { margin-bottom: 20px; }
-    .sect-title { font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.1em; color: var(--text-tertiary); margin-bottom: 8px; padding-bottom: 4px; border-bottom: 1px solid var(--border-subtle); }
-    .kv-table { width: 100%; }
-    .kv-table td { padding: 3px 0; font-family: var(--mono); font-size: 12px; vertical-align: top; border: none; }
-    .kv-table td:first-child { color: var(--cyan); width: 35%; padding-right: 12px; }
-    .kv-table td:last-child { color: var(--text-primary); word-break: break-all; }
-    .code-block {
-      background: var(--bg-root); border: 1px solid var(--border-subtle); border-radius: 6px;
-      padding: 12px; font-family: var(--mono); font-size: 12px; line-height: 1.6;
-      max-height: 300px; overflow: auto; white-space: pre-wrap; word-break: break-word;
-      color: var(--text-primary);
-    }
-    .code-block .json-key { color: var(--cyan); }
-    .code-block .json-str { color: var(--green); }
-    .code-block .json-num { color: var(--amber); }
-    .code-block .json-bool { color: var(--accent); }
+.empty{display:flex;flex-direction:column;align-items:center;justify-content:center;padding:60px 20px;color:var(--comment)}
+.empty code{font-family:var(--mono);font-size:12px;color:var(--purple);background:rgba(189,147,249,.08);padding:2px 6px;border-radius:3px}
 
-    /* ── Pipeline traces ────────────────────────────────────────────── */
-    .trace-card {
-      background: var(--bg-surface); border: 1px solid var(--border-subtle); border-radius: 8px;
-      margin: 0 20px 12px; overflow: hidden;
-    }
-    .trace-head {
-      display: flex; align-items: center; justify-content: space-between; padding: 12px 16px;
-      border-bottom: 1px solid var(--border-subtle); background: var(--bg-elevated);
-    }
-    .trace-head-left { display: flex; align-items: center; gap: 10px; }
-    .trace-name { font-family: var(--mono); font-size: 13px; font-weight: 600; }
-    .trace-id-label { font-family: var(--mono); font-size: 11px; color: var(--text-tertiary); }
-    .trace-status { font-family: var(--mono); font-size: 11px; font-weight: 600; padding: 2px 8px; border-radius: 4px; }
-    .trace-status.ok { color: var(--green); background: var(--green-dim); }
-    .trace-status.fail { color: var(--red); background: var(--red-dim); }
-    .trace-body { padding: 16px; }
-    .trace-step { display: flex; align-items: flex-start; gap: 12px; padding: 8px 0; position: relative; }
-    .trace-step:not(:last-child)::after {
-      content: ''; position: absolute; left: 9px; top: 28px; bottom: -8px; width: 1px;
-      background: var(--border); z-index: 0;
-    }
-    .trace-dot-wrap { width: 20px; display: flex; justify-content: center; padding-top: 2px; flex-shrink: 0; z-index: 1; }
-    .trace-dot { width: 10px; height: 10px; border-radius: 50%; border: 2px solid var(--border); background: var(--bg-root); }
-    .trace-dot.ok { border-color: var(--green); background: var(--green); box-shadow: 0 0 6px rgba(52,211,153,0.4); }
-    .trace-dot.fail { border-color: var(--red); background: var(--red); box-shadow: 0 0 6px rgba(248,113,113,0.4); }
-    .trace-dot.pending { border-color: var(--amber); }
-    .trace-step-info { flex: 1; }
-    .trace-step-name { font-family: var(--mono); font-size: 12px; font-weight: 600; }
-    .trace-step-meta { font-size: 11px; color: var(--text-tertiary); margin-top: 2px; display: flex; gap: 8px; align-items: center; }
-    .trace-step-bar { height: 3px; border-radius: 2px; margin-top: 6px; min-width: 20px; }
-    .trace-step-bar.ok { background: linear-gradient(90deg, var(--green), rgba(52,211,153,0.3)); }
-    .trace-step-bar.fail { background: linear-gradient(90deg, var(--red), rgba(248,113,113,0.3)); }
-    .trace-total { font-family: var(--mono); font-size: 11px; color: var(--text-tertiary); padding-top: 8px; border-top: 1px solid var(--border-subtle); margin-top: 4px; text-align: right; }
-
-    /* ── Empty states ───────────────────────────────────────────────── */
-    .empty-state { display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 80px 20px; color: var(--text-tertiary); }
-    .empty-icon { width: 48px; height: 48px; border-radius: 12px; background: var(--bg-elevated); border: 1px solid var(--border); display: flex; align-items: center; justify-content: center; margin-bottom: 16px; font-size: 20px; }
-    .empty-state p { font-size: 13px; text-align: center; line-height: 1.6; max-width: 360px; }
-    .empty-state code { font-family: var(--mono); font-size: 12px; color: var(--accent); background: var(--accent-dim); padding: 2px 6px; border-radius: 3px; }
-
-    /* ── Overview / tunnel cards ──────────────────────────────────────── */
-    .overview-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 12px; padding: 20px; }
-    .tunnel-card {
-      background: var(--bg-surface); border: 1px solid var(--border-subtle); border-radius: 8px;
-      padding: 16px; cursor: pointer; transition: all 0.15s;
-    }
-    .tunnel-card:hover { border-color: var(--accent); background: var(--bg-elevated); }
-    .tunnel-card-head { display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px; }
-    .tunnel-card-name { font-family: var(--mono); font-size: 14px; font-weight: 600; }
-    .tunnel-card-stats { display: flex; gap: 16px; font-size: 12px; color: var(--text-tertiary); }
-    .tunnel-card-stats span b { color: var(--text-secondary); font-weight: 600; }
-    .tunnel-card-meta { font-size: 11px; color: var(--text-tertiary); margin-top: 8px; font-family: var(--mono); }
-    .overview-stats { display: flex; gap: 1px; background: var(--border-subtle); border-bottom: 1px solid var(--border-subtle); }
-    .overview-stats .stat-cell { flex: 1; background: var(--bg-surface); padding: 16px 20px; }
-
-    /* ── Scrollbar ──────────────────────────────────────────────────── */
-    ::-webkit-scrollbar { width: 6px; }
-    ::-webkit-scrollbar-track { background: transparent; }
-    ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
-    ::-webkit-scrollbar-thumb:hover { background: var(--text-tertiary); }
-
-    /* ── Animations ─────────────────────────────────────────────────── */
-    @keyframes fadeUp { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: none; } }
-    .fade-up { animation: fadeUp 0.3s ease-out both; }
-  </style>
+::-webkit-scrollbar{width:5px}::-webkit-scrollbar-track{background:transparent}::-webkit-scrollbar-thumb{background:var(--line);border-radius:3px}
+</style>
 </head>
 <body>
-  <div id="app"></div>
+<div id="app"></div>
+<script type="module">
+import{h,render}from'https://esm.sh/preact@10.24.3';
+import{useState,useEffect,useCallback}from'https://esm.sh/preact@10.24.3/hooks';
+import htm from'https://esm.sh/htm@3.1.1';
+const html=htm.bind(h);
+const SUB=location.pathname.replace(/^\/ui\/?/,'').replace(/\/$/,'')||'';
 
-  <script type="module">
-    import { h, render } from 'https://esm.sh/preact@10.24.3';
-    import { useState, useEffect, useCallback } from 'https://esm.sh/preact@10.24.3/hooks';
-    import htm from 'https://esm.sh/htm@3.1.1';
-    const html = htm.bind(h);
+function App(){return SUB?html`<${TunnelPage} s=${SUB}/>`:html`<${OverviewPage}/>`}
 
-    const pathPart = location.pathname.replace(/^\/ui\/?/, '').replace(/\/$/, '');
-    const SUB = pathPart || '';  // empty = overview mode
+// ── Overview ─────────────────────────────────────────────────────────
+function OverviewPage(){
+const[d,setD]=useState(null);
+const poll=useCallback(async()=>{try{setD(await(await fetch('/api/overview')).json())}catch(e){}},[]);
+useEffect(()=>{poll();const i=setInterval(poll,3000);return()=>clearInterval(i)},[poll]);
+const t=d?.tunnels||[];
+return html`<div class=shell>
+<nav class=side><div class=side-logo>p</div><button class="side-btn on" title="Tunnels">⬡</button></nav>
+<div class=main>
+<div class=top><span class=top-title>pipepie</span><div class=top-sep/><span style="font-size:13px;color:var(--comment)">All Tunnels</span></div>
+<div class=stats>
+<div class=st><span class=l>Tunnels</span><div class=v>${t.length}</div></div>
+<div class=st><span class=l>Online</span><div class="v g">${d?.online||0}</div></div>
+<div class=st><span class=l>Requests</span><div class=v>${d?.total_requests||0}</div></div>
+<div class=st><span class=l>Errors</span><div class="v r">${d?.total_errors||0}</div></div>
+</div>
+<div class=content>
+${t.length===0?html`<div class=empty><p>No tunnels yet. Run <code>pie connect 3000</code></p></div>`:html`
+<div class=cards>${t.map(x=>html`
+<a href="/ui/${x.subdomain}" class=card key=${x.subdomain}>
+<div class=card-h><span class=card-name><span class="dot ${x.online?'on':'off'}" style="display:inline-block;vertical-align:middle;margin-right:6px"/>${x.subdomain}</span>
+<span style="font-family:var(--mono);font-size:10px;color:${x.online?'var(--green)':'var(--comment)'}">${x.online?'online':'offline'}</span></div>
+<div class=card-url>${x.public_url}</div>
+<div class=card-stats><span><b>${x.total}</b> reqs</span><span style="color:var(--green)"><b>${x.success}</b> ok</span><span style="color:${x.errors>0?'var(--red)':'var(--comment)'}"><b>${x.errors}</b> err</span><span>rate <b>${x.success_rate}</b></span></div>
+${x.online?html`<div class=card-meta>from ${x.remote_addr} · up ${x.uptime}</div>`:''}
+</a>`)}</div>`}
+</div></div></div>`}
 
-    // ── Icons ─────────────────────────────────────────────────────────
-    const icons = {
-      home: html`<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-4 0a1 1 0 01-1-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 01-1 1"/></svg>`,
-      requests: html`<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12a9 9 0 01-9 9m9-9a9 9 0 00-9-9m9 9H3m9 9a9 9 0 01-9-9m9 9c1.657 0 3-4.03 3-9s-1.343-9-3-9m0 18c-1.657 0-3-4.03-3-9s1.343-9 3-9m-9 9a9 9 0 019-9"/></svg>`,
-      traces: html`<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M13 17l5-5-5-5M6 17l5-5-5-5"/></svg>`,
-      replay: html`<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14"><path d="M1 4v6h6M23 20v-6h-6"/><path d="M20.49 9A9 9 0 005.64 5.64L1 10m22 4l-4.64 4.36A9 9 0 013.51 15"/></svg>`,
-      copy: html`<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/></svg>`,
-    };
+// ── Tunnel Detail ────────────────────────────────────────────────────
+function TunnelPage({s}){
+const[reqs,setReqs]=useState([]);const[total,setTotal]=useState(0);const[online,setOnline]=useState(false);
+const[sel,setSel]=useState(null);const[tab,setTab]=useState('requests');
+const poll=useCallback(async()=>{try{const d=await(await fetch('/api/tunnels/'+s+'/requests?limit=50')).json();setReqs(d.requests||[]);setTotal(d.total||0);setOnline(d.online||false)}catch(e){}},[s]);
+useEffect(()=>{poll();const i=setInterval(poll,2000);return()=>clearInterval(i)},[poll]);
+const replay=async id=>{await fetch('/api/tunnels/'+s+'/requests/'+id+'/replay',{method:'POST'});setTimeout(poll,400)};
+const copyC=r=>{const h=J(r.req_headers);let c='curl -X '+r.method+' \\\n  "'+location.protocol+'//'+s+'.'+location.host+r.path+'"';for(const[k,v]of Object.entries(h)){if(k!=='Host')c+=' \\\n  -H "'+k+': '+v+'"'};const b=D(r.req_body);if(b)c+=" \\\n  -d '"+b+"'";navigator.clipboard.writeText(c)};
+const ok=reqs.filter(r=>r.resp_status&&r.resp_status<400).length;
+const er=reqs.filter(r=>r.status==='failed'||r.status==='timeout'||(r.resp_status&&r.resp_status>=400)).length;
+const ds=reqs.filter(r=>r.duration_ms).map(r=>r.duration_ms);const avg=ds.length?Math.round(ds.reduce((a,b)=>a+b,0)/ds.length):0;
+return html`<div class=shell>
+<nav class=side>
+<div class=side-logo>p</div>
+<a href="/ui/" class=side-btn title="All Tunnels">⬡</a>
+<button class="side-btn ${tab==='requests'?'on':''}" onClick=${()=>setTab('requests')} title="Requests">◉</button>
+<button class="side-btn ${tab==='traces'?'on':''}" onClick=${()=>setTab('traces')} title="Traces">◈</button>
+</nav>
+<div class=main>
+<div class=top>
+<a href="/ui/" style="text-decoration:none"><span class=top-title>pipepie</span></a>
+<div class=top-sep/>
+<div class=top-pill><span class="dot ${online?'on':'off'}"/>${s}</div>
+<div class=top-r><b>${total}</b> reqs</div>
+</div>
+<div class=stats>
+<div class=st><span class=l>Requests</span><div class=v>${total}</div></div>
+<div class=st><span class=l>Success</span><div class="v g">${ok}</div></div>
+<div class=st><span class=l>Errors</span><div class="v r">${er}</div></div>
+<div class=st><span class=l>Avg Latency</span><div class="v y">${avg}<span style="font-size:12px;font-weight:400">ms</span></div></div>
+</div>
+<div class=content>
+${tab==='requests'?html`<${ReqView} reqs=${reqs} sel=${sel} onSel=${setSel}/>`:html`<${TraceView} reqs=${reqs}/>`}
+</div>
+</div>
+<div class="ov ${sel?'open':''}" onClick=${()=>setSel(null)}/>
+<div class="det ${sel?'open':''}">
+${sel&&html`<${DetailPanel} r=${sel} onClose=${()=>setSel(null)} onReplay=${replay} onCopy=${copyC}/>`}
+</div>
+</div>`}
 
-    function App() {
-      // Route: /ui/ = overview, /ui/{sub} = tunnel detail
-      if (!SUB) return html`<${OverviewPage} />`;
-      return html`<${TunnelPage} subdomain=${SUB} />`;
-    }
+// ── Requests ─────────────────────────────────────────────────────────
+function ReqView({reqs,sel,onSel}){
+if(!reqs.length)return html`<div class=empty><p>Waiting for webhooks...<br/>Send to <code>${location.protocol}//${SUB}.${location.host}</code></p></div>`;
+return html`<div>
+<div class=rh><span>Time</span><span>Method</span><span>Path</span><span>Status</span><span>Dur</span><span>Size</span><span>Step</span></div>
+${reqs.map(r=>html`<div key=${r.id} class="rr ${sel&&sel.id===r.id?'sel':''}" onClick=${()=>onSel(r)}>
+<span class=c-t>${T(r.created_at)}</span>
+<span class="c-m m${r.method}">${r.method}</span>
+<span class=c-p>${r.path}</span>
+<span>${ST(r)}</span>
+<span class=c-d>${r.duration_ms?r.duration_ms+'ms':'—'}</span>
+<span class=c-d>${r.req_size?fS(r.req_size):''}</span>
+<span>${r.step_name?html`<span class=step>${r.step_name}</span>`:''}</span>
+</div>`)}</div>`}
 
-    // ── Overview page (all tunnels) ───────────────────────────────────
-    function OverviewPage() {
-      const [data, setData] = useState(null);
+// ── Pipeline Traces ──────────────────────────────────────────────────
+function TraceView({reqs}){
+const tm={};reqs.forEach(r=>{if(r.trace_id){if(!tm[r.trace_id])tm[r.trace_id]=[];tm[r.trace_id].push(r)}});
+const traces=Object.entries(tm).map(([id,steps])=>{steps.sort((a,b)=>a.created_at.localeCompare(b.created_at));const fail=steps.some(s=>s.status==='failed'||s.status==='timeout');const ms=steps.reduce((a,s)=>a+(s.duration_ms||0),0);const mx=Math.max(...steps.map(s=>s.duration_ms||1),1);return{id,pipe:steps[0].pipeline_id,steps,fail,ms,mx}});
+if(!traces.length)return html`<div class=empty><p>No pipeline traces yet.<br/>Add <code>X-Pipepie-Pipeline</code> headers to correlate webhooks.</p></div>`;
+return html`<div style="padding-top:10px">${traces.map(t=>html`
+<div class=tr-card key=${t.id}>
+<div class=tr-h>
+<div><span class=tr-name>${t.pipe||'pipeline'}</span><span class=tr-id>${t.id}</span></div>
+<span class="tr-st ${t.fail?'fail':'ok'}">${t.fail?'FAILED':'OK'} · ${t.ms}ms</span>
+</div>
+<div class=tr-body>
+${t.steps.map(s=>{const w=Math.max(10,((s.duration_ms||0)/t.mx)*100);const c=s.status==='forwarded'?'ok':s.status==='failed'?'fail':'pend';return html`
+<div class=tr-step>
+<span class=tr-sn>${s.step_name||s.path}</span>
+<div class=tr-bw><div class="tr-b ${c}" style="width:${w}%">${s.duration_ms?s.duration_ms+'ms':''}</div></div>
+<span class="tr-ss ${s.resp_status>=400?'s4':'s2'}">${s.resp_status||'...'}</span>
+</div>`})}
+<div class=tr-tot>${t.steps.length} steps · ${t.ms}ms total</div>
+</div></div>`)}</div>`}
 
-      const poll = useCallback(async () => {
-        try {
-          const r = await fetch('/api/overview');
-          setData(await r.json());
-        } catch(e) { console.warn("pipepie poll error:", e); }
-      }, []);
+// ── Detail Panel ─────────────────────────────────────────────────────
+function DetailPanel({r,onClose,onReplay,onCopy}){
+const hd=J(r.req_headers);const rh=r.resp_headers?J(r.resp_headers):{};const body=D(r.req_body);const rb=D(r.resp_body);
+return html`<div class=dh>
+<div><span class="c-m m${r.method}" style="font-size:14px">${r.method}</span> <span style="font-family:var(--mono);font-size:13px;color:var(--cyan)">${r.path}</span></div>
+<button class=dx onClick=${onClose}>✕</button></div>
+<div class=ds>
+<div class=da><button class="btn btn-p" onClick=${()=>onReplay(r.id)}>↻ Replay</button><button class=btn onClick=${()=>onCopy(r)}>⎘ cURL</button></div>
+<div class=sect><div class=sect-t>Request Headers</div><table class=kv><tbody>${Object.entries(hd).map(([k,v])=>html`<tr><td>${k}</td><td>${v}</td></tr>`)}</tbody></table></div>
+${body?html`<div class=sect><div class=sect-t>Request Body</div><div class=cblk>${F(body)}</div></div>`:''}
+${r.resp_status!=null?html`
+<div class=sect><div class=sect-t>Response · <span class=${r.resp_status>=400?'s4':'s2'}>${r.resp_status}</span></div><table class=kv><tbody>${Object.entries(rh).map(([k,v])=>html`<tr><td>${k}</td><td>${v}</td></tr>`)}</tbody></table></div>
+${rb?html`<div class=sect><div class=sect-t>Response Body</div><div class=cblk>${F(rb)}</div></div>`:''}
+`:''}
+<div class=sect><div class=sect-t>Metadata</div><table class=kv><tbody>
+<tr><td>ID</td><td style="font-size:11px;color:var(--comment)">${r.id}</td></tr>
+<tr><td>Status</td><td>${r.status}</td></tr>
+${r.source_ip?html`<tr><td>Source IP</td><td>${r.source_ip}</td></tr>`:''}
+${r.duration_ms?html`<tr><td>Duration</td><td>${r.duration_ms}ms</td></tr>`:''}
+${r.pipeline_id?html`<tr><td>Pipeline</td><td style="color:var(--purple)">${r.pipeline_id}</td></tr>`:''}
+${r.step_name?html`<tr><td>Step</td><td style="color:var(--cyan)">${r.step_name}</td></tr>`:''}
+${r.trace_id?html`<tr><td>Trace</td><td style="font-size:11px">${r.trace_id}</td></tr>`:''}
+${r.error?html`<tr><td>Error</td><td style="color:var(--red)">${r.error}</td></tr>`:''}
+</tbody></table></div>
+</div>`}
 
-      useEffect(() => { poll(); const id = setInterval(poll, 3000); return () => clearInterval(id); }, [poll]);
+// Helpers
+function T(iso){if(!iso)return'';try{return new Date(iso).toLocaleTimeString('en-US',{hour12:false})}catch{return iso}}
+function ST(r){if(r.status==='pending')return html`<span class=sp>···</span>`;if(r.status==='timeout')return html`<span class=s5>TMO</span>`;if(r.status==='failed')return html`<span class=s5>ERR</span>`;const c=r.resp_status>=500?'s5':r.resp_status>=400?'s4':'s2';return html`<span class="c-s ${c}">${r.resp_status}</span>`}
+function J(s){try{return JSON.parse(s||'{}')}catch{return{}}}
+function D(d){if(!d)return null;if(typeof d==='string')return d;try{return atob(d)}catch{return String(d)}}
+function F(s){if(!s)return'';try{return JSON.stringify(JSON.parse(s),null,2)}catch{return s}}
+function fS(b){if(b<1024)return b+'B';if(b<1048576)return(b/1024).toFixed(1)+'K';return(b/1048576).toFixed(1)+'M'}
 
-      const tunnels = data?.tunnels || [];
-      const onlineCount = data?.online || 0;
-      const totalReqs = data?.total_requests || 0;
-
-      return html`
-        <div class="shell">
-          <nav class="sidebar">
-            <div class="sidebar-logo">h</div>
-            <button class="sidebar-btn active" title="Overview">${icons.home}</button>
-          </nav>
-          <div class="main">
-            <header class="topbar">
-              <span class="topbar-title"><em>hook</em>pipe</span>
-              <div class="topbar-sep"></div>
-              <span style="font-size:13px;color:var(--text-secondary)">All Tunnels</span>
-            </header>
-
-            <div class="overview-stats">
-              <div class="stat-cell"><span class="label">Tunnels</span><span class="val">${tunnels.length}</span></div>
-              <div class="stat-cell"><span class="label">Online</span><span class="val ok">${onlineCount}</span></div>
-              <div class="stat-cell"><span class="label">Total Requests</span><span class="val">${totalReqs}</span></div>
-              <div class="stat-cell"><span class="label">Errors</span><span class="val err">${data?.total_errors || 0}</span></div>
-              <div class="stat-cell"><span class="label">Domain</span><span class="val" style="font-size:14px">${data?.domain || '—'}</span></div>
-            </div>
-
-            <div class="content">
-              ${tunnels.length === 0 ? html`
-                <div class="empty-state fade-up">
-                  <div class="empty-icon">🔌</div>
-                  <p>No tunnels registered yet.<br/>Create one with <code>pipepie tunnel create myapp</code></p>
-                </div>
-              ` : html`
-                <div class="overview-grid">
-                  ${tunnels.map(t => html`
-                    <a href="/ui/${t.subdomain}" class="tunnel-card fade-up" style="text-decoration:none;color:inherit">
-                      <div class="tunnel-card-head">
-                        <div style="display:flex;align-items:center;gap:8px">
-                          <span class="live-dot ${t.online?'on':'off'}" style="display:inline-block;flex-shrink:0"></span>
-                          <span class="tunnel-card-name">${t.subdomain}</span>
-                        </div>
-                        <span style="font-family:var(--mono);font-size:10px;color:${t.online?'var(--green)':'var(--text-tertiary)'}">${t.online?'online':'offline'}</span>
-                      </div>
-
-                      <div style="font-family:var(--mono);font-size:11px;color:var(--text-tertiary);margin-bottom:10px;word-break:break-all">${t.public_url}</div>
-
-                      <div class="tunnel-card-stats">
-                        <span><b>${t.total}</b> total</span>
-                        <span style="color:var(--green)"><b>${t.success}</b> ok</span>
-                        <span style="color:${t.errors>0?'var(--red)':'var(--text-tertiary)'}"><b>${t.errors}</b> err</span>
-                        <span>rate <b>${t.success_rate}</b></span>
-                      </div>
-
-                      ${t.online ? html`
-                        <div style="margin-top:10px;padding-top:10px;border-top:1px solid var(--border-subtle);display:flex;gap:16px;font-size:11px;color:var(--text-tertiary)">
-                          <span style="font-family:var(--mono)">from ${t.remote_addr}</span>
-                          <span>up ${t.uptime}</span>
-                        </div>
-                        ${t.protocol ? html`<div style="margin-top:4px;font-family:var(--mono);font-size:10px;color:var(--accent)">${t.protocol}</div>` : ''}
-                      ` : ''}
-
-                      ${t.last_request ? html`<div class="tunnel-card-meta" style="margin-top:8px">last request ${fmtTimeAgo(t.last_request)}</div>` : ''}
-                    </a>
-                  `)}
-                </div>
-              `}
-            </div>
-          </div>
-        </div>
-      `;
-    }
-
-    // ── Tunnel detail page ────────────────────────────────────────────
-    function TunnelPage({ subdomain }) {
-      const [reqs, setReqs] = useState([]);
-      const [total, setTotal] = useState(0);
-      const [online, setOnline] = useState(false);
-      const [sel, setSel] = useState(null);
-      const [tab, setTab] = useState('requests');
-
-      const poll = useCallback(async () => {
-        try {
-          const r = await fetch('/api/tunnels/' + subdomain + '/requests?limit=50');
-          const d = await r.json();
-          setReqs(d.requests || []);
-          setTotal(d.total || 0);
-          setOnline(d.online || false);
-        } catch(e) { console.warn("pipepie poll error:", e); }
-      }, [subdomain]);
-
-      useEffect(() => { poll(); const id = setInterval(poll, 2000); return () => clearInterval(id); }, [poll]);
-
-      const replay = async (id) => {
-        await fetch('/api/tunnels/' + subdomain + '/requests/' + id + '/replay', { method: 'POST' });
-        setTimeout(poll, 400);
-      };
-
-      const copyAsCurl = (req) => {
-        const hd = safeParse(req.req_headers);
-        let c = 'curl -X ' + req.method + ' \\\n  "' + location.protocol + '//' + subdomain + '.' + location.host + req.path + '"';
-        for (const [k,v] of Object.entries(hd)) { if (k !== 'Host') c += ' \\\n  -H "' + k + ': ' + v + '"'; }
-        const body = tryDecode(req.req_body);
-        if (body) c += " \\\n  -d '" + body + "'";
-        navigator.clipboard.writeText(c);
-      };
-
-      const okCount = reqs.filter(r => r.resp_status && r.resp_status < 400).length;
-      const errCount = reqs.filter(r => r.status === 'failed' || r.status === 'timeout' || (r.resp_status && r.resp_status >= 400)).length;
-      const durations = reqs.filter(r => r.duration_ms).map(r => r.duration_ms);
-      const avgMs = durations.length ? Math.round(durations.reduce((a,b) => a+b, 0) / durations.length) : 0;
-
-      return html`
-        <div class="shell">
-          <nav class="sidebar">
-            <div class="sidebar-logo">h</div>
-            <a href="/ui/" class="sidebar-btn" title="All Tunnels" style="text-decoration:none">${icons.home}</a>
-            <button class="sidebar-btn ${tab==='requests'?'active':''}" onClick=${()=>setTab('requests')} title="Requests">${icons.requests}</button>
-            <button class="sidebar-btn ${tab==='traces'?'active':''}" onClick=${()=>setTab('traces')} title="Pipeline Traces">${icons.traces}</button>
-          </nav>
-
-          <div class="main">
-            <header class="topbar">
-              <a href="/ui/" style="text-decoration:none"><span class="topbar-title"><em>hook</em>pipe</span></a>
-              <div class="topbar-sep"></div>
-              <div class="tunnel-pill">
-                <span class="live-dot ${online?'on':'off'}"></span>
-                ${subdomain}
-              </div>
-              <div class="topbar-right">
-                <span class="topbar-stat"><b>${total}</b> reqs</span>
-              </div>
-            </header>
-
-            <div class="stats-strip">
-              <div class="stat-cell"><span class="label">Requests</span><span class="val">${total}</span></div>
-              <div class="stat-cell"><span class="label">Success</span><span class="val ok">${okCount}</span></div>
-              <div class="stat-cell"><span class="label">Errors</span><span class="val err">${errCount}</span></div>
-              <div class="stat-cell"><span class="label">Avg Latency</span><span class="val lat">${avgMs}<span style="font-size:12px;font-weight:400">ms</span></span></div>
-            </div>
-
-            <div class="content">
-              ${tab === 'requests' ? html`<${RequestsView} reqs=${reqs} sel=${sel} onSelect=${setSel} />` : html`<${TracesView} reqs=${reqs} />`}
-            </div>
-          </div>
-
-          <div class="detail-backdrop ${sel?'open':''}" onClick=${()=>setSel(null)}></div>
-          <div class="detail ${sel?'open':''}">
-            ${sel && html`<${DetailPanel} req=${sel} onClose=${()=>setSel(null)} onReplay=${replay} onCopy=${copyAsCurl} />`}
-          </div>
-        </div>
-      `;
-    }
-
-    function RequestsView({ reqs, sel, onSelect }) {
-      if (!reqs.length) return html`
-        <div class="empty-state fade-up">
-          <div class="empty-icon">📡</div>
-          <p>Waiting for webhooks...<br/>Send requests to <code>${location.protocol}//${SUB}.${location.host}</code></p>
-        </div>`;
-
-      return html`
-        <div class="req-list">
-          <div class="req-row-head"><span>Time</span><span>Method</span><span>Path</span><span>Status</span><span>Latency</span><span>Step</span></div>
-          ${reqs.map(r => html`
-            <div key=${r.id} class="req-row ${sel&&sel.id===r.id?'selected':''}" onClick=${()=>onSelect(r)}>
-              <span class="cell-time">${fmtTime(r.created_at)}</span>
-              <span class="cell-method ${r.method}">${r.method}</span>
-              <span class="cell-path">${r.path}</span>
-              <span>${fmtStatus(r)}</span>
-              <span class="cell-dur">${r.duration_ms ? r.duration_ms+'ms' : '—'}</span>
-              <span class="cell-step">${r.step_name ? html`<span class="step-tag">${r.step_name}</span>` : ''}</span>
-            </div>
-          `)}
-        </div>`;
-    }
-
-    function TracesView({ reqs }) {
-      const traceMap = {};
-      for (const r of reqs) {
-        if (r.trace_id) {
-          if (!traceMap[r.trace_id]) traceMap[r.trace_id] = [];
-          traceMap[r.trace_id].push(r);
-        }
-      }
-      const traces = Object.entries(traceMap).map(([id, steps]) => {
-        steps.sort((a,b) => a.created_at.localeCompare(b.created_at));
-        const failed = steps.some(s => s.status === 'failed' || s.status === 'timeout');
-        const totalMs = steps.reduce((a,s) => a + (s.duration_ms||0), 0);
-        const maxMs = Math.max(...steps.map(s => s.duration_ms||1), 1);
-        return { id, pipeline: steps[0].pipeline_id, steps, failed, totalMs, maxMs };
-      });
-
-      if (!traces.length) return html`
-        <div class="empty-state fade-up">
-          <div class="empty-icon">🔗</div>
-          <p>No pipeline traces yet.<br/>Add <code>X-Hookpipe-Trace-ID</code> headers to correlate webhooks.</p>
-        </div>`;
-
-      return html`<div style="padding-top:12px">${traces.map(t => html`
-        <div class="trace-card fade-up">
-          <div class="trace-head">
-            <div class="trace-head-left">
-              <span class="trace-name">${t.pipeline || 'pipeline'}</span>
-              <span class="trace-id-label">${t.id}</span>
-            </div>
-            <span class="trace-status ${t.failed?'fail':'ok'}">${t.failed ? 'FAILED' : 'OK'}</span>
-          </div>
-          <div class="trace-body">
-            ${t.steps.map(s => html`
-              <div class="trace-step">
-                <div class="trace-dot-wrap"><div class="trace-dot ${s.status==='forwarded'?'ok':s.status==='failed'?'fail':'pending'}"></div></div>
-                <div class="trace-step-info">
-                  <div class="trace-step-name">${s.step_name || s.path}</div>
-                  <div class="trace-step-meta">
-                    <span>${s.method} ${s.path}</span>
-                    <span>${s.duration_ms ? s.duration_ms+'ms' : '...'}</span>
-                    ${s.resp_status ? html`<span class="cell-status ${s.resp_status>=400?'s4':'s2'}">${s.resp_status}</span>` : ''}
-                  </div>
-                  <div class="trace-step-bar ${s.status==='forwarded'?'ok':'fail'}" style="width:${Math.max(10, (s.duration_ms||0)/t.maxMs*200)}px"></div>
-                </div>
-              </div>
-            `)}
-            <div class="trace-total">Total: ${t.totalMs}ms · ${t.steps.length} steps</div>
-          </div>
-        </div>
-      `)}</div>`;
-    }
-
-    function DetailPanel({ req, onClose, onReplay, onCopy }) {
-      const hd = safeParse(req.req_headers);
-      const rhd = req.resp_headers ? safeParse(req.resp_headers) : {};
-      const body = tryDecode(req.req_body);
-      const rbody = tryDecode(req.resp_body);
-
-      return html`
-        <div class="detail-head">
-          <div class="detail-head-left">
-            <span class="cell-method ${req.method}" style="font-size:14px">${req.method}</span>
-            <span style="font-family:var(--mono);font-size:13px">${req.path}</span>
-          </div>
-          <button class="detail-close-btn" onClick=${onClose}>✕</button>
-        </div>
-        <div class="detail-scroll">
-          <div class="detail-actions">
-            <button class="btn-sm primary" onClick=${()=>onReplay(req.id)}>${icons.replay} Replay</button>
-            <button class="btn-sm" onClick=${()=>onCopy(req)}>${icons.copy} cURL</button>
-          </div>
-
-          <div class="sect"><div class="sect-title">Request Headers</div>
-            <table class="kv-table"><tbody>${Object.entries(hd).map(([k,v]) => html`<tr><td>${k}</td><td>${v}</td></tr>`)}</tbody></table>
-          </div>
-
-          ${body ? html`<div class="sect"><div class="sect-title">Request Body</div><div class="code-block">${syntaxHL(body)}</div></div>` : ''}
-
-          ${req.resp_status != null ? html`
-            <div class="sect"><div class="sect-title">Response · ${html`<span class="${req.resp_status>=400?'s4':'s2'}">${req.resp_status}</span>`}</div>
-              <table class="kv-table"><tbody>${Object.entries(rhd).map(([k,v]) => html`<tr><td>${k}</td><td>${v}</td></tr>`)}</tbody></table>
-            </div>
-            ${rbody ? html`<div class="sect"><div class="sect-title">Response Body</div><div class="code-block">${syntaxHL(rbody)}</div></div>` : ''}
-          ` : ''}
-
-          <div class="sect"><div class="sect-title">Metadata</div>
-            <table class="kv-table"><tbody>
-              <tr><td>ID</td><td style="font-size:11px;opacity:0.7">${req.id}</td></tr>
-              <tr><td>Status</td><td>${req.status}</td></tr>
-              ${req.source_ip ? html`<tr><td>Source IP</td><td>${req.source_ip}</td></tr>` : ''}
-              ${req.duration_ms ? html`<tr><td>Duration</td><td>${req.duration_ms}ms</td></tr>` : ''}
-              ${req.pipeline_id ? html`<tr><td>Pipeline</td><td>${req.pipeline_id}</td></tr>` : ''}
-              ${req.step_name ? html`<tr><td>Step</td><td>${req.step_name}</td></tr>` : ''}
-              ${req.trace_id ? html`<tr><td>Trace ID</td><td style="font-size:11px">${req.trace_id}</td></tr>` : ''}
-              ${req.replay_of ? html`<tr><td>Replay of</td><td style="font-size:11px">${req.replay_of}</td></tr>` : ''}
-              ${req.error ? html`<tr><td>Error</td><td style="color:var(--red)">${req.error}</td></tr>` : ''}
-            </tbody></table>
-          </div>
-        </div>
-      `;
-    }
-
-    // ── Helpers ────────────────────────────────────────────────────────
-    function fmtTime(iso) { if(!iso) return ''; try { return new Date(iso).toLocaleTimeString('en-US',{hour12:false}); } catch { return iso; } }
-    function fmtDate(iso) { if(!iso) return ''; try { return new Date(iso).toLocaleDateString('en-US',{month:'short',day:'numeric'}); } catch { return iso; } }
-    function fmtTimeAgo(iso) {
-      if(!iso) return '';
-      const s = Math.floor((Date.now() - new Date(iso).getTime()) / 1000);
-      if (s < 60) return s + 's ago';
-      if (s < 3600) return Math.floor(s/60) + 'm ago';
-      if (s < 86400) return Math.floor(s/3600) + 'h ago';
-      return Math.floor(s/86400) + 'd ago';
-    }
-    function fmtStatus(r) {
-      if (r.status==='pending') return html`<span class="cell-status s-pend">···</span>`;
-      if (r.status==='timeout') return html`<span class="cell-status s5">TMO</span>`;
-      if (r.status==='failed') return html`<span class="cell-status s5">ERR</span>`;
-      const c = r.resp_status >= 500 ? 's5' : r.resp_status >= 400 ? 's4' : 's2';
-      return html`<span class="cell-status ${c}">${r.resp_status}</span>`;
-    }
-    function safeParse(s) { try { return JSON.parse(s||'{}'); } catch { return {}; } }
-    function tryDecode(d) { if(!d) return null; if(typeof d==='string') return d; try { return atob(d); } catch { return String(d); } }
-    function syntaxHL(s) {
-      if (!s) return '';
-      try {
-        const obj = JSON.parse(s);
-        return highlightJSON(JSON.stringify(obj, null, 2));
-      } catch { return s; }
-    }
-    function highlightJSON(s) {
-      // Simple JSON syntax highlighting via tagged template
-      return s.replace(/"([^"]+)":/g, (m, k) => html`<span class="json-key">"${k}"</span>:`)
-              ? s : s; // fallback: return raw string for htm
-    }
-
-    render(html`<${App} />`, document.getElementById('app'));
-  </script>
+render(html`<${App}/>`,document.getElementById('app'));
+</script>
 </body>
 </html>

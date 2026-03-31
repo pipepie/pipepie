@@ -150,3 +150,25 @@ func (f *File) ResolvedTunnels() map[string]Tunnel {
 
 	return result
 }
+
+// PipelineRules returns path→step rules for the server to auto-match incoming webhooks.
+type PipelineRule struct {
+	PathPrefix string
+	PipelineID string
+	StepName   string
+}
+
+func (f *File) PipelineRules() []PipelineRule {
+	if f.Pipeline == nil {
+		return nil
+	}
+	rules := make([]PipelineRule, 0, len(f.Pipeline.Steps))
+	for _, s := range f.Pipeline.Steps {
+		rules = append(rules, PipelineRule{
+			PathPrefix: s.Webhook,
+			PipelineID: f.Pipeline.Name,
+			StepName:   s.Name,
+		})
+	}
+	return rules
+}
