@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"log/slog"
 	"os"
+	"strings"
 	"os/signal"
 	"syscall"
 	"time"
@@ -91,7 +92,7 @@ func loadServerConfig(path string, cfg *server.Config) error {
 	if err := yaml.Unmarshal(data, &sc); err != nil {
 		return err
 	}
-	cfg.Domain = sc.Domain
+	cfg.Domain = strings.TrimSpace(sc.Domain)
 	cfg.TunnelAddr = sc.TunnelAddr
 	cfg.DBPath = sc.DBPath
 	cfg.KeyFile = sc.KeyFile

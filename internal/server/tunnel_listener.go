@@ -2,7 +2,6 @@ package server
 
 import (
 	"crypto/rand"
-	"encoding/hex"
 	"fmt"
 	"io"
 	"log/slog"
@@ -17,10 +16,25 @@ import (
 	"github.com/hashicorp/yamux"
 )
 
+var adjectives = []string{
+	"fast", "blue", "red", "calm", "cool", "dark", "bold", "keen",
+	"warm", "wild", "soft", "gold", "pink", "mint", "sage", "iron",
+	"jade", "ruby", "snow", "dawn", "dusk", "pale", "deep", "slim",
+	"tall", "flat", "pure", "rare", "rich", "safe", "wise", "nice",
+}
+var nouns = []string{
+	"fox", "owl", "bee", "elk", "ant", "cat", "dog", "bat",
+	"cod", "eel", "hen", "jay", "ram", "yak", "koi", "emu",
+	"oak", "elm", "ash", "bay", "fir", "ivy", "fig", "gem",
+	"sky", "sun", "sea", "ice", "fog", "dew", "arc", "orb",
+}
+
 func generateSubdomain() string {
-	b := make([]byte, 4)
+	b := make([]byte, 2)
 	rand.Read(b)
-	return hex.EncodeToString(b)
+	adj := adjectives[int(b[0])%len(adjectives)]
+	noun := nouns[int(b[1])%len(nouns)]
+	return adj + "-" + noun
 }
 
 // TunnelListener accepts TCP connections from pie clients.

@@ -87,7 +87,7 @@ type TLSConfig struct {
 // Run executes the interactive setup wizard.
 func Run(configPath string) error {
 	fmt.Println()
-	fmt.Println(bannerStyle.Render(titleStyle.Render("pie setup") + "  " + dimStyle.Render("server configuration")))
+	fmt.Println("  " + titleStyle.Render("pie setup") + "  " + dimStyle.Render("server configuration"))
 	fmt.Println()
 
 	// ── 1. Domain ────────────────────────────────────────────────────
@@ -228,43 +228,14 @@ func Run(configPath string) error {
 		fmt.Println(warnStyle.Render("  ✗") + " Port 9443 in use")
 	}
 
-	// Firewall
-	portsToCheck := []int{9443}
-	if !behindNginx {
-		portsToCheck = append([]int{80, 443}, portsToCheck...)
-	}
-	closedPorts := []int{}
-	for _, p := range portsToCheck {
-		if !checkPortFromOutside(pubIP, p) {
-			closedPorts = append(closedPorts, p)
-		}
-	}
-	if len(closedPorts) > 0 {
-		fmt.Println()
-		fmt.Println(warnStyle.Render("  Open these ports in your firewall:"))
-		fmt.Println()
-		switch detectFirewall() {
-		case "ufw":
-			for _, p := range closedPorts {
-				fmt.Println(cyanStyle.Render(fmt.Sprintf("    sudo ufw allow %d/tcp", p)))
-			}
-		case "firewalld":
-			strs := make([]string, len(closedPorts))
-			for i, p := range closedPorts {
-				strs[i] = fmt.Sprintf("%d", p)
-			}
-			fmt.Println(cyanStyle.Render(fmt.Sprintf("    sudo firewall-cmd --add-port={%s}/tcp --permanent", strings.Join(strs, ","))))
-			fmt.Println(cyanStyle.Render("    sudo firewall-cmd --reload"))
-		default:
-			strs := make([]string, len(closedPorts))
-			for i, p := range closedPorts {
-				strs[i] = fmt.Sprintf("%d", p)
-			}
-			fmt.Println(dimStyle.Render(fmt.Sprintf("    Open TCP ports %s", strings.Join(strs, ", "))))
+	// Firewall — only check if a firewall is actually active
+	fw := detectFirewall()
+	if fw == "ufw" || fw == "firewalld" {
+		if behindNginx {
 		}
 		fmt.Println()
-		var fwDone bool
-		huh.NewForm(huh.NewGroup(huh.NewConfirm().Title("Firewall configured?").Value(&fwDone))).WithTheme(draculaTheme()).Run()
+		fmt.Println(dimStyle.Render("  Firewall detected: " + fw))
+		fmt.Println(dimStyle.Render("  Make sure ports 80, 443, 9443 are open."))
 	}
 
 	// ── 5. TLS ───────────────────────────────────────────────────────
@@ -414,21 +385,20 @@ WantedBy=multi-user.target
 
 	// ── 10. Summary ──────────────────────────────────────────────────
 	fmt.Println()
-	fmt.Println(lipgloss.NewStyle().
-		Border(lipgloss.DoubleBorder()).
-		BorderForeground(green).
-		Padding(1, 2).
-		Render(
-			successStyle.Render("✓ Setup complete!")+"\n\n"+
-				dimStyle.Render("Domain    ")+boldStyle.Render(domain)+"\n"+
-				dimStyle.Render("Key       ")+keyStyle.Render(pubKeyHex[:24]+"...")+"\n"+
-				dimStyle.Render("Config    ")+configPath+"\n\n"+
-				boldStyle.Render("Start server:")+"\n"+
-				cyanStyle.Render("  pie server --config "+configPath)+"\n\n"+
-				boldStyle.Render("Connect from dev machine:")+"\n"+
-				cyanStyle.Render(fmt.Sprintf("  pie login --server %s:9443 --key %s", domain, pubKeyHex))+"\n"+
-				cyanStyle.Render("  pie connect 3000"),
-		))
+	fmt.Println("  ────────────────────────────────────")
+	fmt.Println()
+	fmt.Println(successStyle.Render("  ✓ Setup complete!"))
+	fmt.Println()
+	fmt.Println(dimStyle.Render("  Domain    ") + boldStyle.Render(domain))
+	fmt.Println(dimStyle.Render("  Key       ") + keyStyle.Render(pubKeyHex[:24]+"..."))
+	fmt.Println(dimStyle.Render("  Config    ") + configPath)
+	fmt.Println()
+	fmt.Println(boldStyle.Render("  Start server:"))
+	fmt.Println(cyanStyle.Render("    pie server --config " + configPath))
+	fmt.Println()
+	fmt.Println(boldStyle.Render("  Connect from dev machine:"))
+	fmt.Println(cyanStyle.Render(fmt.Sprintf("    pie login --server %s:9443 --key %s", domain, pubKeyHex)))
+	fmt.Println(cyanStyle.Render("    pie connect 3000"))
 	fmt.Println()
 
 	return nil
