@@ -255,4 +255,4 @@ Requires Go 1.21+.
 
 ## License
 
-MIT
+AGPL-3.0 — free to use, modify, and self-host. If you modify and offer as a service, you must open-source your changes.
