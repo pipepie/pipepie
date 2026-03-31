@@ -11,6 +11,7 @@ import (
 	"github.com/Seinarukiro2/pipepie/internal/client"
 	"github.com/Seinarukiro2/pipepie/internal/config"
 	"github.com/charmbracelet/huh"
+	"github.com/charmbracelet/lipgloss"
 	"github.com/spf13/cobra"
 )
 
@@ -131,6 +132,13 @@ Uses saved config from 'pie login' — or override with flags.
 			config.SaveClient(cfg)
 		}
 
+		// Clean exit message
+		if ctx.Err() != nil {
+			fmt.Println()
+			fmt.Println(lipgloss.NewStyle().Foreground(lipgloss.Color("#6272a4")).Render("  Tunnel closed."))
+			fmt.Println()
+			return nil
+		}
 		return err
 	},
 	Args: cobra.MaximumNArgs(1),
