@@ -1,0 +1,29 @@
+name: Feature Request
+description: Suggest a new feature
+labels: ["enhancement"]
+body:
+  - type: textarea
+    id: problem
+    attributes:
+      label: What problem does this solve?
+      placeholder: I'm trying to ... but currently ...
+    validations:
+      required: true
+  - type: textarea
+    id: solution
+    attributes:
+      label: Proposed solution
+      placeholder: It would be great if Pipepie could ...
+    validations:
+      required: true
+  - type: dropdown
+    id: area
+    attributes:
+      label: Area
+      options:
+        - CLI / commands
+        - Tunneling / protocol
+        - Web dashboard
+        - AI pipeline tracing
+        - Setup / deployment
+        - Other
