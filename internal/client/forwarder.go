@@ -8,7 +8,7 @@ import (
 	"strings"
 	"time"
 
-	"github.com/Seinarukiro2/pipepie/internal/protocol/pb"
+	"github.com/pipepie/pipepie/internal/protocol/pb"
 )
 
 // Forwarder forwards webhook requests to the local target.

@@ -56,7 +56,7 @@ var updateCmd = &cobra.Command{
 		goos := runtime.GOOS
 		goarch := runtime.GOARCH
 		filename := fmt.Sprintf("pie_%s_%s.tar.gz", goos, goarch)
-		url := fmt.Sprintf("https://github.com/Seinarukiro2/pipepie/releases/download/%s/%s", latest, filename)
+		url := fmt.Sprintf("https://github.com/pipepie/pipepie/releases/download/%s/%s", latest, filename)
 
 		var dlErr error
 		var binary []byte

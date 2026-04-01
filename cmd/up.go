@@ -13,8 +13,8 @@ import (
 	"sync"
 	"time"
 
-	"github.com/Seinarukiro2/pipepie/internal/client"
-	"github.com/Seinarukiro2/pipepie/internal/config"
+	"github.com/pipepie/pipepie/internal/client"
+	"github.com/pipepie/pipepie/internal/config"
 	"github.com/fatih/color"
 	"github.com/spf13/cobra"
 )

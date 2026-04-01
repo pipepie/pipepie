@@ -7,9 +7,9 @@ import (
 	"strconv"
 	"time"
 
-	"github.com/Seinarukiro2/pipepie/internal/protocol"
-	"github.com/Seinarukiro2/pipepie/internal/protocol/pb"
-	"github.com/Seinarukiro2/pipepie/internal/ui"
+	"github.com/pipepie/pipepie/internal/protocol"
+	"github.com/pipepie/pipepie/internal/protocol/pb"
+	"github.com/pipepie/pipepie/internal/ui"
 	"github.com/google/uuid"
 )
 

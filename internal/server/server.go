@@ -19,9 +19,9 @@ import (
 	"github.com/flynn/noise"
 	"golang.org/x/crypto/acme/autocert"
 
-	"github.com/Seinarukiro2/pipepie/internal/protocol"
-	"github.com/Seinarukiro2/pipepie/internal/protocol/pb"
-	"github.com/Seinarukiro2/pipepie/internal/store"
+	"github.com/pipepie/pipepie/internal/protocol"
+	"github.com/pipepie/pipepie/internal/protocol/pb"
+	"github.com/pipepie/pipepie/internal/store"
 )
 
 // PipelineRule maps a webhook path prefix to a pipeline step.

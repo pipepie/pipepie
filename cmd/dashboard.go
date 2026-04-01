@@ -8,9 +8,9 @@ import (
 	"runtime"
 	"time"
 
-	"github.com/Seinarukiro2/pipepie/internal/config"
-	"github.com/Seinarukiro2/pipepie/internal/protocol"
-	"github.com/Seinarukiro2/pipepie/internal/protocol/pb"
+	"github.com/pipepie/pipepie/internal/config"
+	"github.com/pipepie/pipepie/internal/protocol"
+	"github.com/pipepie/pipepie/internal/protocol/pb"
 	"github.com/charmbracelet/huh/spinner"
 	"github.com/charmbracelet/lipgloss"
 	"github.com/hashicorp/yamux"

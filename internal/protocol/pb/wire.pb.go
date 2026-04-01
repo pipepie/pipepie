@@ -849,7 +849,7 @@ const file_wire_proto_rawDesc = "" +
 	"\x02id\x18\x01 \x01(\tR\x02id\x12\x18\n" +
 	"\amessage\x18\x02 \x01(\tR\amessage\"\x06\n" +
 	"\x04Ping\"\x06\n" +
-	"\x04PongB6Z4github.com/Seinarukiro2/pipepie/internal/protocol/pbb\x06proto3"
+	"\x04PongB1Z/github.com/pipepie/pipepie/internal/protocol/pbb\x06proto3"
 
 var (
 	file_wire_proto_rawDescOnce sync.Once

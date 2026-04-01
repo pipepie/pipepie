@@ -12,7 +12,7 @@ import (
 	"io"
 	"sync"
 
-	"github.com/Seinarukiro2/pipepie/internal/protocol/pb"
+	"github.com/pipepie/pipepie/internal/protocol/pb"
 	"github.com/klauspost/compress/zstd"
 	"google.golang.org/protobuf/proto"
 )

@@ -1,9 +1,9 @@
 #!/bin/sh
 # pipepie installer
-# Usage: curl -sSL https://raw.githubusercontent.com/Seinarukiro2/pipepie/main/install.sh | sh
+# Usage: curl -sSL https://raw.githubusercontent.com/pipepie/pipepie/main/install.sh | sh
 set -e
 
-REPO="Seinarukiro2/pipepie"
+REPO="pipepie/pipepie"
 BINARY="pie"
 INSTALL_DIR="/usr/local/bin"
 

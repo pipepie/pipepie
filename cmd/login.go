@@ -7,7 +7,7 @@ import (
 	"strings"
 	"time"
 
-	"github.com/Seinarukiro2/pipepie/internal/config"
+	"github.com/pipepie/pipepie/internal/config"
 	"github.com/charmbracelet/huh"
 	"github.com/charmbracelet/huh/spinner"
 	"github.com/charmbracelet/lipgloss"

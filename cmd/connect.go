@@ -8,8 +8,8 @@ import (
 	"os/signal"
 	"strings"
 
-	"github.com/Seinarukiro2/pipepie/internal/client"
-	"github.com/Seinarukiro2/pipepie/internal/config"
+	"github.com/pipepie/pipepie/internal/client"
+	"github.com/pipepie/pipepie/internal/config"
 	"github.com/charmbracelet/huh"
 	"github.com/charmbracelet/lipgloss"
 	"github.com/spf13/cobra"

@@ -9,8 +9,8 @@ import (
 	"syscall"
 	"time"
 
-	"github.com/Seinarukiro2/pipepie/internal/server"
-	"github.com/Seinarukiro2/pipepie/internal/setup"
+	"github.com/pipepie/pipepie/internal/server"
+	"github.com/pipepie/pipepie/internal/setup"
 	"github.com/charmbracelet/lipgloss"
 	"github.com/spf13/cobra"
 	"gopkg.in/yaml.v3"

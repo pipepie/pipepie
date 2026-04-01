@@ -1,4 +1,4 @@
-module github.com/Seinarukiro2/pipepie
+module github.com/pipepie/pipepie
 
 go 1.25.0
 

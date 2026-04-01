@@ -17,7 +17,7 @@ import (
 	"strings"
 	"time"
 
-	"github.com/Seinarukiro2/pipepie/internal/protocol"
+	"github.com/pipepie/pipepie/internal/protocol"
 	"github.com/caddyserver/certmagic"
 	"github.com/charmbracelet/huh"
 	"github.com/charmbracelet/huh/spinner"

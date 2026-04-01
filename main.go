@@ -3,7 +3,7 @@ package main
 import (
 	"os"
 
-	"github.com/Seinarukiro2/pipepie/cmd"
+	"github.com/pipepie/pipepie/cmd"
 	"github.com/charmbracelet/lipgloss"
 )
 

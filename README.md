@@ -244,7 +244,7 @@ Benchmarked on a single machine (localhost tunnel):
 ## Build from Source
 
 ```bash
-git clone https://github.com/Seinarukiro2/pipepie
+git clone https://github.com/pipepie/pipepie
 cd pipepie
 make build    # → ./pie
 make test     # run tests

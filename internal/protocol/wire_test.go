@@ -4,7 +4,7 @@ import (
 	"bytes"
 	"testing"
 
-	"github.com/Seinarukiro2/pipepie/internal/protocol/pb"
+	"github.com/pipepie/pipepie/internal/protocol/pb"
 )
 
 func TestWriteReadFrame(t *testing.T) {

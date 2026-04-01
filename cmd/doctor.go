@@ -1,7 +1,7 @@
 package cmd
 
 import (
-	"github.com/Seinarukiro2/pipepie/internal/doctor"
+	"github.com/pipepie/pipepie/internal/doctor"
 	"github.com/spf13/cobra"
 )
 

@@ -8,7 +8,7 @@ import (
 	"strings"
 	"time"
 
-	"github.com/Seinarukiro2/pipepie/internal/config"
+	"github.com/pipepie/pipepie/internal/config"
 	"github.com/charmbracelet/lipgloss"
 	"github.com/spf13/cobra"
 )

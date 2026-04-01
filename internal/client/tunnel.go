@@ -11,8 +11,8 @@ import (
 	"sync"
 	"time"
 
-	"github.com/Seinarukiro2/pipepie/internal/protocol"
-	"github.com/Seinarukiro2/pipepie/internal/protocol/pb"
+	"github.com/pipepie/pipepie/internal/protocol"
+	"github.com/pipepie/pipepie/internal/protocol/pb"
 	"github.com/hashicorp/yamux"
 )
 

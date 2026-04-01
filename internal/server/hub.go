@@ -5,7 +5,7 @@ import (
 	"sync"
 	"time"
 
-	"github.com/Seinarukiro2/pipepie/internal/protocol/pb"
+	"github.com/pipepie/pipepie/internal/protocol/pb"
 )
 
 // TunnelSession is the unified interface for any connected tunnel client.

@@ -2,7 +2,7 @@ syntax = "proto3";
 
 package pipepie;
 
-option go_package = "github.com/Seinarukiro2/pipepie/internal/protocol/pb";
+option go_package = "github.com/pipepie/pipepie/internal/protocol/pb";
 
 // Frame wraps every message on the wire. The oneof ensures type-safe dispatch.
 message Frame {

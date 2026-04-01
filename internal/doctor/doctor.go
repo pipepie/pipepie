@@ -14,7 +14,7 @@ import (
 	"strings"
 	"time"
 
-	"github.com/Seinarukiro2/pipepie/internal/setup"
+	"github.com/pipepie/pipepie/internal/setup"
 	"github.com/fatih/color"
 	"gopkg.in/yaml.v3"
 )

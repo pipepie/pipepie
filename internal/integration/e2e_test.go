@@ -15,9 +15,9 @@ import (
 	"testing"
 	"time"
 
-	"github.com/Seinarukiro2/pipepie/internal/client"
-	"github.com/Seinarukiro2/pipepie/internal/protocol"
-	"github.com/Seinarukiro2/pipepie/internal/server"
+	"github.com/pipepie/pipepie/internal/client"
+	"github.com/pipepie/pipepie/internal/protocol"
+	"github.com/pipepie/pipepie/internal/server"
 )
 
 type testEnv struct {
