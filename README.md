@@ -1,6 +1,6 @@
 # Pipepie
 
-Self-hosted, encrypted tunnel for webhooks, AI pipelines, and local development. Open-source ngrok alternative with end-to-end encryption.
+Self-hosted, encrypted tunnel for webhooks, AI pipelines, and local development. End-to-end Noise encryption, pipeline tracing, web dashboard.
 
 ![pipepie connect](demo/hero.gif)
 
@@ -220,24 +220,13 @@ Client (pie connect)                    Server (pie server)
 | Parallel (20 workers) | 577 req/s |
 | 1MB body | 16ms |
 
-## vs ngrok
+## What makes Pipepie different
 
-| | Pipepie | ngrok |
-|---|---|---|
-| Self-hosted | ✅ | ❌ |
-| Open source | ✅ | ❌ |
-| E2E encryption | ✅ Noise NK | ❌ TLS termination |
-| AI pipeline tracing | ✅ | ❌ |
-| Auto-detect providers | ✅ 6 providers | ❌ |
-| Request inspection | ✅ | ✅ (paid) |
-| Replay | ✅ | ✅ (paid) |
-| TCP tunnels | ✅ | ✅ |
-| WebSocket | ✅ | ✅ |
-| SSE streaming | ✅ | ✅ |
-| Custom domains | ✅ | ✅ (paid) |
-| Setup wizard | ✅ | N/A |
-| MCP detection | ✅ | ❌ |
-| Price | Free | $8-39/mo |
+- **Self-hosted & open source** — your infrastructure, your data, no third-party traffic inspection
+- **End-to-end encrypted** — Noise NK protocol, the relay server never sees plaintext
+- **AI-native** — auto-detects 6 providers, pipeline tracing, MCP support
+- **Complete toolkit** — tunneling + inspection + replay + dashboard in one binary
+- **Free forever** — no bandwidth limits, no session timeouts, no paid tiers for core features
 
 ## License
 
