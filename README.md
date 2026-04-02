@@ -196,7 +196,7 @@ Client (pie connect)                    Server (pie server)
 
 ## MCP Server (Claude, Cursor, AI tools)
 
-<a href="https://glama.ai/mcp/servers/@pipepie/pipepie"><img height="40" src="https://glama.ai/mcp/servers/@pipepie/pipepie/badge" alt="pipepie MCP server" /></a>
+<a href="https://glama.ai/mcp/servers/@pipepie/pipepie"><img height="180" src="https://glama.ai/mcp/servers/@pipepie/pipepie/badge" alt="pipepie MCP server" /></a>
 
 Pipepie includes a built-in [Model Context Protocol](https://modelcontextprotocol.io) server. Your AI tools can inspect webhooks, replay requests, manage tunnels, and debug pipelines — directly from the chat.
 
